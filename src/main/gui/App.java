@@ -1,4 +1,4 @@
-package gui;
+package main.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -550,7 +550,7 @@ public class App extends javax.swing.JFrame {
                 {"18", null, "", null}
             },
             new String [] {
-                "Hole", "Par", "Aaron", "Ben"
+                "Hole", "Par", "Aaron", "Anthony"
             }
         ) {
             Class[] types = new Class [] {
@@ -666,7 +666,7 @@ public class App extends javax.swing.JFrame {
 
     private void btnSwitchProfileMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSwitchProfileMousePressed
         if (currentProfile.getUsername().compareTo("andersonmaaron") == 0) {
-            currentProfile = manager.getProfiles().get("benjamedes");
+            currentProfile = manager.getProfiles().get("orsobianco");
         } else {
             currentProfile = manager.getProfiles().get("andersonmaaron");
         }
@@ -729,8 +729,8 @@ public class App extends javax.swing.JFrame {
         for (String profileName : summaries.keySet()) {
             if (profileName.compareTo("Aaron") == 0) {
                 manager.getProfiles().get("andersonmaaron").updateFromScorecard(summaries.get("Aaron"));
-            } else if (profileName.compareTo("Ben") == 0) {
-                manager.getProfiles().get("benjamedes").updateFromScorecard(summaries.get("Ben"));
+            } else if (profileName.compareTo("Anthony") == 0) {
+                manager.getProfiles().get("orsobianco").updateFromScorecard(summaries.get("Anthony"));
             } else {
                 System.out.println("Dunno...");
             }

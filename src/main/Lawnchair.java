@@ -1,5 +1,6 @@
-package gui;
+package main;
 
+import main.gui.App;
 import manager.Manager;
 
 public class Lawnchair {
