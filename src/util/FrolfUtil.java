@@ -32,6 +32,9 @@ public class FrolfUtil {
 	
 	public final static int STABILITY_MAX_PCT = 45;
 	public final static int ACCEPT_DIST_DELTA = 10;
+	public final static int PUTT_MAX_DIST = 150;
+	public final static int MID_MAX_DIST = 250;
+	public final static int FAIR_MAX_DIST = 320;
 	
 	public static Disc readDiscFromFile(String filename) throws org.json.simple.parser.ParseException {
 		JSONObject json = new JSONObject();
@@ -287,7 +290,6 @@ public class FrolfUtil {
 			(int)((long)jsonObject.get("bestScore")),
 			(int)((long)jsonObject.get("averageScore")),
 			(int)((long)jsonObject.get("worstScore")),
-			(String)jsonObject.get("userWithBestScore"),
 			(String)jsonObject.get("description")
 		);
 	}
@@ -411,5 +413,37 @@ public class FrolfUtil {
 		int numDiscs = filteredDiscs.size();
 		System.out.println("numDiscs: " + numDiscs);
 		return filteredDiscs.getDiscs().get(random.nextInt(numDiscs));
+	}
+	
+	/*
+	 * Recommends a disc for a specified hole based on the available discs
+	 * 
+	 * TODO make a "best guess" if criteria aren't met.
+	 */
+	public static Disc recommendDiscForHole(Bag bag, Hole hole) {
+		Map<String, Object> criteria = new HashMap<String, Object>();
+		int distance = hole.getDistance();
+		
+		if (distance < PUTT_MAX_DIST) { criteria.put("discType", DiscType.PUTTAPPROACH); }
+		else if (distance < MID_MAX_DIST) { criteria.put("discType", DiscType.MIDRANGE); }
+		else if (distance < FAIR_MAX_DIST) { criteria.put("discType", DiscType.FAIRWAYDRIVER); }
+		else { criteria.put("discType", DiscType.DISTANCEDRIVER); }
+		
+		switch(hole.getHoleType()) {
+			case STRAIGHT:
+				criteria.put("stability", Stability.STABLE);
+				break;
+			case SLIGHT_LEFT:
+			// TODO  Use turn/fade ratings based on hard vs slight curves
+			case HARD_LEFT:
+				criteria.put("stability", Stability.OVERSTABLE);
+				break;
+			case SLIGHT_RIGHT:
+			case HARD_RIGHT:
+				criteria.put("stability", Stability.UNDERSTABLE);
+				break;
+		}
+
+		return getDiscByCriteria(criteria);
 	}
 }

@@ -27,6 +27,7 @@ public class Manager {
 			discs = FrolfUtil.loadDiscs();
 		} catch (IOException e) { e.printStackTrace(); }
 		
+		// TODO discs should be a part of the profile definition
 		for (String username : profiles.keySet()) { 
 			ArrayList<String> discNames = FrolfUtil.readDiscsForUser(username);
 			for (String discName : discNames) {

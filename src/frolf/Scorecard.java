@@ -3,6 +3,8 @@ package frolf;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.json.simple.JSONObject;
+
 public class Scorecard {
 	private String courseName; 	      // Name of the course played
 	private HashMap<String, ArrayList<Integer>> scores; // Player scores for each hole
@@ -24,7 +26,27 @@ public class Scorecard {
 	 * 
 	 * TODO complete method
 	 */
-	public void save() {}
+	public void save() {
+		JSONObject json = new JSONObject();
+		json.put("course", courseName);
+		json.put("pars", pars.toArray());
+		for (String username : scores.keySet()) {
+			json.put(username, scores.get(username).toArray());
+		}
+	}
+	
+	/*
+	 * Returns the scores for a specific hole.
+	 * TODO create a HoleSummary class and ScorecardSummary
+	 * 		will have a List<HoleSummary> 
+	 */
+	public ArrayList<Integer> getScoresForHole(int holeNumber) {
+		ArrayList<Integer> holeScores = new ArrayList<Integer>();
+		for (String profile : scores.keySet()) {
+			holeScores.add(scores.get(profile).get(holeNumber));
+		}
+		return holeScores;
+	}
 
 	/*
 	 * Returns a HashMap where

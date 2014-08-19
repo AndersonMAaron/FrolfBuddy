@@ -26,6 +26,7 @@ public class Profile {
 	protected int birdies;
     protected int pars;
 	protected Bag discs;
+	protected float averageOverUnder;
 	// Hidden from user
 	private int lifetimeOverUnder;
 	private int bogeys;
@@ -46,6 +47,7 @@ public class Profile {
 	        "* R/L handed: " + rlHanded + "\n" +
 	        "* Favorite disc: " + favoriteDiscName + "\n" +
 	        "* Favorite course: " + favoriteCourseName + "\n" +
+	        "* Average Over/under: " + averageOverUnder + "\n" +
 	        "* Games played: " + gamesPlayed + "\n" +
 	        "* Lifetime score: " + lifetimeThrows + "\n" +
 	        "* Lifetime Over/under: " + lifetimeOverUnder + "\n" +
@@ -88,6 +90,7 @@ public class Profile {
 		this.tripleBogeys = tripleBogeys;
 		this.worstHole = worstHole;
 		this.lifetimeThrows = lifetimeThrows;
+		this.averageOverUnder = lifetimeOverUnder / gamesPlayed;
 	}
 	
 	public Profile(JSONObject json) {
@@ -114,6 +117,9 @@ public class Profile {
 	    this.lifetimeThrows = (int)((long)json.get("lifetimeThrows"));
 	    this.lifetimeOverUnder = (int)((long)json.get("lifetimeOverUnder"));
 	    this.discs = new Bag();
+	    
+	    if (gamesPlayed == 0) { averageOverUnder = 0; }
+	    else { this.averageOverUnder = lifetimeOverUnder / gamesPlayed; }
 	}
 
     public void save() throws IOException {
@@ -179,6 +185,7 @@ public class Profile {
 	protected int getTripleBogeys() { return tripleBogeys; }
 	protected int getWorstHole() { return worstHole; }
 	protected int getLifetimeThrows() { return lifetimeThrows; }
+	protected float getAverageOverUnder() { return averageOverUnder; }
 	
 	public void setDisplayName(String displayName) 
 		{ this.displayName = displayName; }
@@ -205,6 +212,10 @@ public class Profile {
 		this.lifetimeOverUnder += amount; 
 	}
 	
+	public void updateAverageOverUnder() {
+		averageOverUnder = lifetimeOverUnder / gamesPlayed;
+	}
+	
 	public void addToLifetimeThrows(int amount) { lifetimeThrows += amount; }
 	
 	public void updateFromScorecard(ScorecardSummary summary) {
@@ -223,6 +234,7 @@ public class Profile {
 	    if (summary.getWorstHole() > worstHole){
 	        setWorstHole(summary.getWorstHole());
 	    }
+	    updateAverageOverUnder();
 	}
 	
 	public void addDiscToBag(Disc disc) { discs.addDisc(disc); }

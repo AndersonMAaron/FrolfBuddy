@@ -1,5 +1,7 @@
 package frolf;
 
+import java.util.ArrayList;
+
 import org.json.simple.JSONObject;
 
 public class Hole {
@@ -12,7 +14,6 @@ public class Hole {
 	private int bestScore;				// Lowest # of throws ever used to complete hole
 	private int averageScore;			// Average # of throws used to complete hole
 	private int worstScore;				// Most # of throws ever used to complete hole
-	private String userWithBestScore;	// User with the 'bestScore'
 	private String description;			// Description of the hole
 	
 	/* 
@@ -20,7 +21,7 @@ public class Hole {
 	 */
 	public Hole(int holeNumber, HoleType holeType, int distance, int par, int timesPlayed,
 			int holesInOne, int bestScore, int averageScore, int worstScore,
-			String userWithBestScore, String description) {
+			String description) {
 		this.holeNumber = holeNumber;
 		this.holeType = holeType;
 		this.distance = distance;
@@ -30,7 +31,6 @@ public class Hole {
 		this.bestScore = bestScore;
 		this.averageScore = averageScore;
 		this.worstScore = worstScore;
-		this.userWithBestScore = userWithBestScore;
 		this.description = description;
 	}
 	
@@ -38,9 +38,33 @@ public class Hole {
 	 * Returns the hole in its specified JSON format
 	 * TODO complete method
 	 */
+	@SuppressWarnings("unchecked")
 	public JSONObject toJson() {
 		JSONObject obj = new JSONObject();
+		
+		obj.put("holeNumber", holeNumber);
+		obj.put("holeType", holeType.toString());
+		obj.put("distance", distance);
+		obj.put("par", par);
+		obj.put("timesPlayed", timesPlayed);
+		obj.put("holesInOne", holesInOne);
+		obj.put("bestScore", bestScore);
+		obj.put("averageScore", averageScore);
+		obj.put("worstScore", worstScore);
+		obj.put("description", description);
+		
 		return obj;
+	}
+	
+	public void updateFromScorecard(Scorecard scorecard) {
+		ArrayList<Integer> scores = scorecard.getScoresForHole(holeNumber);
+		for (int score : scores) {
+			addTimePlayed();
+			if (score == 1) { addHolesInOne(1); }
+			if (score < bestScore) { bestScore = score; }
+			averageScore = (averageScore + score) / timesPlayed;
+			if (score > worstScore) { worstScore = score; }
+		}
 	}
 	
 	/* GETTERS */
@@ -53,6 +77,9 @@ public class Hole {
     public int getBestScore() { return bestScore; }
     public int getAverageScore() { return averageScore; }
     public int getWorstScore() { return worstScore; }
-    public String getUserWithBestScore() { return userWithBestScore; }
     public String getDescription() { return description; }
+    
+    /* SETTERS++ */
+    public void addHolesInOne(int amount) { holesInOne += amount; }
+    public void addTimePlayed() { timesPlayed++; }
 }

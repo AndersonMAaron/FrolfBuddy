@@ -10,7 +10,7 @@ public class Lawnchair {
 		new Lawnchair();
 		
 		if (Manager.getInstance().getProfiles().size() == 0) {
-			//TODO Run new profile page
+			//TODO Run create new profile page
 		} else {
 			App.main(null);
 		}
