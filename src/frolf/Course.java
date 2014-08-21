@@ -52,6 +52,7 @@ public class Course {
 	public String getDescription() { return description; }
 	/* GETTERS++ */
 	public int getNumberOfHoles() { return holes.size(); }
+	
 	public Hole getHole(int holeNumber) {
 		for (Hole hole : holes) {
 		    if (hole.getHoleNumber() == holeNumber) { return hole; }
@@ -59,7 +60,16 @@ public class Course {
 	        
         return null;
     }
-        
+	
+	public ArrayList<Integer> getPars() {
+		ArrayList<Integer> pars = new ArrayList<Integer>();
+		for (int i = 0; i < getNumberOfHoles(); i++) {
+			pars.add(holes.get(i).getPar());
+		}
+		
+		return pars;
+	}
+	  
 	/* SETTERS++ */
 	public void addHole(Hole hole) {
 		holes.add(hole);
