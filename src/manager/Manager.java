@@ -49,4 +49,13 @@ public class Manager {
 	public HashMap<String, Profile> getProfiles() { return profiles; }
 	public HashMap<String, Course> getCourses() { return courses; }
 	public Bag getDiscs() { return discs; }
+	
+	public void saveProfiles() {
+		for (String username : profiles.keySet()) {
+			Profile profile = profiles.get(username);
+			try {
+				profile.save();
+			} catch (IOException e) { e.printStackTrace(); }
+		}
+	}
 }

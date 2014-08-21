@@ -4,7 +4,15 @@
  * and open the template in the editor.
  */
 
-package testapp;
+package main.gui;
+
+import java.util.ArrayList;
+import java.util.Date;
+
+import javax.swing.JOptionPane;
+
+import manager.Manager;
+import player.Profile;
 
 /**
  *
@@ -46,7 +54,7 @@ public class NewProfile extends javax.swing.JFrame {
         btnSave = new javax.swing.JButton();
         lblHanded = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
 
         lblUsername.setText("Username:");
 
@@ -168,8 +176,44 @@ public class NewProfile extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSaveMousePressed
+    	ArrayList<String> errors = getValidationErrors();
+        if (!errors.isEmpty()){
+        	String errorMsg = "Please fix the following errors:\n";
+        	for (String error : errors) {
+        		errorMsg += error + ", \n";
+        	}
+        	
+        	JOptionPane.showMessageDialog(null, errorMsg);
+        	return;
+        }
+        else { //Create the new profile
+        	String username = txtUsername.getText();
+        	boolean isRightHanded = ((String)cbHanded.getSelectedItem()).compareTo("Left Handed") != 0;
+
+        	Manager.getInstance().getProfiles().put(username, 
+        		new Profile(
+        			username, 
+        			txtDisplayName.getText(),
+        			new Date(Integer.parseInt(txtStartDate.getText())),
+        			isRightHanded,
+        			txtFavoriteDisc.getText(),
+        			txtFavoriteCourse.getText(),
+        			0,
+        			(int) spnHolesInOne.getValue(),
+        			0, 0, 0, 0, 0,
+        			0, 0, 0, 0, 0
+        	));
+        }
+    }
+    
+    private ArrayList<String> getValidationErrors() {
+    	ArrayList<String> errors = new ArrayList<String>();
+    	
+    	String username = txtUsername.getText();
+    	if (username.isEmpty()) { errors.add("Username field is blank"); }
+    	
+    	return errors;
+    }
 
     private void btnCancelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelMousePressed
         // TODO add your handling code here:

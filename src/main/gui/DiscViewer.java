@@ -4,7 +4,11 @@
  * and open the template in the editor.
  */
 
-package testapp;
+package main.gui;
+
+import manager.Manager;
+import util.Constants;
+import discs.Disc;
 
 /**
  *
@@ -17,6 +21,19 @@ public class DiscViewer extends javax.swing.JFrame {
      */
     public DiscViewer() {
         initComponents();
+        loadComboBox();
+    }
+    
+    public void displayDisc(String discName) {
+    	Disc disc = Manager.getInstance().getDiscs().getDisc(discName);
+    	txtSummary.setText(disc.getSummary());
+    	pbPower.setValue(disc.getSpeed());
+    }
+    
+    public void loadComboBox() {
+    	for (Disc disc : Manager.getInstance().getDiscs().getDiscs()) {
+            cbDiscs.addItem(disc.getName());
+        }
     }
 
     /**
@@ -35,8 +52,10 @@ public class DiscViewer extends javax.swing.JFrame {
         cbDiscs = new javax.swing.JComboBox();
         lblPower = new javax.swing.JLabel();
         pbPower = new javax.swing.JProgressBar();
+    	pbPower.setMinimum(0);
+    	pbPower.setMaximum(Constants.MAX_DISC_SPEED);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
 
         pDiscPic.setBackground(new java.awt.Color(51, 0, 153));
 
@@ -55,7 +74,7 @@ public class DiscViewer extends javax.swing.JFrame {
         txtSummary.setRows(5);
         spSummary.setViewportView(txtSummary);
 
-        cbDiscs.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbDiscs.setModel(new javax.swing.DefaultComboBoxModel(new String[] { }));
         cbDiscs.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbDiscsItemStateChanged(evt);
@@ -129,7 +148,7 @@ public class DiscViewer extends javax.swing.JFrame {
     }//GEN-LAST:event_cbDiscsActionPerformed
 
     private void cbDiscsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbDiscsItemStateChanged
-        // TODO add your handling code here:
+    	displayDisc((String)cbDiscs.getSelectedItem());
     }//GEN-LAST:event_cbDiscsItemStateChanged
 
     /**

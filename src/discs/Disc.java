@@ -27,15 +27,18 @@ public class Disc {
 	}
 	
 	public void show() { 
-		System.out.println("--------- DISC ---------");
-		System.out.println("Name: " + name);
-		System.out.println("Manufacturer: " + manufacturer);
-		System.out.println("Type: " + discType);
-		System.out.println("Stability: " + stability);
-		System.out.println("Speed:" + speed);
-		System.out.println("Glide: " + glide);
-		System.out.println("Turn: " + turn);
-		System.out.println("Fade: " + fade);
+		System.out.println(getSummary());
+	}
+	
+	public String getSummary() {
+		return "Name: " + name + "\n" +
+			"Disc Type: " + discType.toString() + "\n" + 
+			"Stability: " + stability.toString() + "\n" +
+			"Manufacturer: " + manufacturer.toString() + "\n" + 
+			"Speed: " + speed + "\n" + 
+			"Glide: " + glide + "\n" +
+			"Turn: " + turn + "\n" +
+			"Fade: " + fade + "\n";
 	}
 	
 	/* GETTERS */

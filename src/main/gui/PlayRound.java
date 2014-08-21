@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package testapp;
+package main.gui;
 
 /**
  *
@@ -42,7 +42,7 @@ public class PlayRound extends javax.swing.JFrame {
         miSelPlayer1 = new javax.swing.JMenuItem();
         miSelPlayer2 = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
 
         tblScorecard.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

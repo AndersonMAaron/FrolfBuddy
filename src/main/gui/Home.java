@@ -4,18 +4,21 @@
  * and open the template in the editor.
  */
 
-package testapp;
+package main.gui;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  *
  * @author o607771
  */
-public class App extends javax.swing.JFrame {
+public class Home extends javax.swing.JFrame {
 
     /**
-     * Creates new form App
+     * Creates new form Home
      */
-    public App() {
+    public Home() {
         initComponents();
     }
 
@@ -45,6 +48,7 @@ public class App extends javax.swing.JFrame {
         mMenuBar = new javax.swing.JMenuBar();
         mFile = new javax.swing.JMenu();
         miChangeProfile = new javax.swing.JMenuItem();
+        miCreateProfile = new javax.swing.JMenuItem();
         mEdit = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -194,12 +198,20 @@ public class App extends javax.swing.JFrame {
 
         miChangeProfile.setText("Change Profile");
         miChangeProfile.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                miChangeProfileMouseClicked(evt);
-            }
+        	public void actionPerformed(ActionEvent e) {
+        		miChangeProfileActionPerformed(e);
+        	}
         });
         mFile.add(miChangeProfile);
-
+        
+        miCreateProfile.setText("Create Profile");
+        miCreateProfile.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		miCreateProfileActionPerformed(e);
+        	}
+        });
+        mFile.add(miCreateProfile);
+        
         mMenuBar.add(mFile);
 
         mEdit.setText("Edit");
@@ -224,34 +236,49 @@ public class App extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }
 
     private void btnViewDiscsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnViewDiscsMousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnViewDiscsMousePressed
+    	java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new DiscViewer().setVisible(true);
+            }
+        });
+    }
 
     private void btnRecommendMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRecommendMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnRecommendMousePressed
+    }
 
     private void btnPlayRoundMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPlayRoundMousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPlayRoundMousePressed
+    	java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new PlayRound().setVisible(true);
+            }
+        });
+    }
 
     private void btnViewGamesMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnViewGamesMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnViewGamesMousePressed
+    }
 
-    private void miChangeProfileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_miChangeProfileMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_miChangeProfileMouseClicked
+    private void miChangeProfileActionPerformed(ActionEvent e) {
+    	//TODO pop up JOptionWindow with loaded profiles
+    }
+    
+    private void miCreateProfileActionPerformed(ActionEvent e) {
+    	java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new NewProfile().setVisible(true);
+            }
+        });
+    }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
@@ -263,25 +290,24 @@ public class App extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(App.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(App.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(App.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(App.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new App().setVisible(true);
+                new Home().setVisible(true);
             }
         });
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    /* BEGIN JFRAME VARS */
     private javax.swing.JButton btnPlayRound;
     private javax.swing.JButton btnRecommend;
     private javax.swing.JButton btnViewDiscs;
@@ -291,6 +317,7 @@ public class App extends javax.swing.JFrame {
     private javax.swing.JMenu mFile;
     private javax.swing.JMenuBar mMenuBar;
     private javax.swing.JMenuItem miChangeProfile;
+    private javax.swing.JMenuItem miCreateProfile;
     private javax.swing.JPanel pDiscDisplay;
     private javax.swing.JPanel pEncloser;
     private javax.swing.JPanel pProfilePic;
@@ -300,5 +327,5 @@ public class App extends javax.swing.JFrame {
     private javax.swing.JScrollPane sProfileSummary;
     private javax.swing.JTextArea tProfileSummary;
     private javax.swing.JToolBar tlToolBar;
-    // End of variables declaration//GEN-END:variables
+    /* END JFRAME VARS */
 }
