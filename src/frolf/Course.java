@@ -53,6 +53,10 @@ public class Course {
 	/* GETTERS++ */
 	public int getNumberOfHoles() { return holes.size(); }
 	
+	/*
+	 * Returns Hole with holeNumber == 'holeNumber' if exists,
+	 * returns null if it doesn't
+	 */
 	public Hole getHole(int holeNumber) {
 		for (Hole hole : holes) {
 		    if (hole.getHoleNumber() == holeNumber) { return hole; }
@@ -61,6 +65,9 @@ public class Course {
         return null;
     }
 	
+	/*
+	 * Returns a list of the pars for this course
+	 */
 	public ArrayList<Integer> getPars() {
 		ArrayList<Integer> pars = new ArrayList<Integer>();
 		for (int i = 0; i < getNumberOfHoles(); i++) {

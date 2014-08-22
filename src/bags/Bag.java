@@ -20,14 +20,14 @@ public class Bag {								     // Desired percent of bag to be:
     protected ArrayList<Disc> discs; 				 // Discs in this bag
 
     /* 
-     * Empty bag
+     * Default constrcutor - empty bag
      */
     public Bag() {
         discs = new ArrayList<Disc>();
     }
     
     /*
-     * Pre-populated bag
+     * Fully defined constructor - pre-populated bag
      */
     public Bag(ArrayList<Disc> discs) {
     	this.discs = discs; 
@@ -47,7 +47,10 @@ public class Bag {								     // Desired percent of bag to be:
         return discs.size();
     }
     
-    public String show() {
+    /*
+     * Prettified toString()
+     */
+    public String getSummary() {
     	String output = "";
     	
     	for (Disc disc : discs) {

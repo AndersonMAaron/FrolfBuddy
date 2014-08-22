@@ -35,6 +35,9 @@ public class Profile {
 	private int worstHole;
 	private int lifetimeThrows;
 	
+	/*
+	 * Prettified toString()
+	 */
 	public String getProfileSummary() {
 	    String rlHanded = isRightHanded ? "Right handed" : "Left handed";
 	    String summary = 
@@ -59,12 +62,15 @@ public class Profile {
 	        "* Bogeys: " + bogeys + "\n" +
 	        "* Double bogeys: " + doubleBogeys + "\n" + 
 	        "* Triple bogeys: " + tripleBogeys + "\n" +
-	        "* Discs: " + discs.show() + "\n" +
+	        "* Discs: " + discs.getSummary() + "\n" +
 	        "*************************";
 	    
 	    return summary;
 	}
 	
+	/*
+	 * Fully defined constructor
+	 */
 	public Profile(String username, String displayName, Date startDate,
 			boolean isRightHanded, String favoriteDiscName, String favoriteCourseName,
 			int gamesPlayed, int holesInOne, int albatrosses, int eagles, int birdies,
@@ -93,6 +99,9 @@ public class Profile {
 		this.averageOverUnder = lifetimeOverUnder / gamesPlayed;
 	}
 	
+	/*
+	 * Constructor from JSON definition
+	 */
 	public Profile(JSONObject json) {
 	    this.username = (String)json.get("username");
 	    this.displayName = (String)json.get("displayName");
@@ -122,6 +131,9 @@ public class Profile {
 	    else { this.averageOverUnder = lifetimeOverUnder / gamesPlayed; }
 	}
 
+	/*
+	 * Saves the profile to JSON definition format
+	 */
     public void save() throws IOException {
         JSONObject json = new JSONObject();
         json.put("startYear", startDate.getYear());
@@ -158,6 +170,9 @@ public class Profile {
         saveDiscs();
     }
     
+    /*
+     * Saves the disc list
+     */
     public void saveDiscs() throws IOException {
     	File file = new File("bags/" + username + "/bag.txt");
         FileWriter fw = new FileWriter(file.getAbsolutePath());
@@ -166,6 +181,7 @@ public class Profile {
         }
     }
 	
+    /* GETTERS */
 	public String getUsername() { return username; }
 	public String getDisplayName() { return displayName; }
 	public Date getStartDate() { return startDate; }
@@ -187,6 +203,7 @@ public class Profile {
 	protected int getLifetimeThrows() { return lifetimeThrows; }
 	protected float getAverageOverUnder() { return averageOverUnder; }
 	
+	/* SETTERS */
 	public void setDisplayName(String displayName) 
 		{ this.displayName = displayName; }
 	public void setIsRightHanded(boolean isRightHanded) 
@@ -197,7 +214,9 @@ public class Profile {
 		{ this.favoriteCourseName = favoriteCourseName; }
 	public void setWorstHole(int worstHole) 
 		{ this.worstHole = worstHole; }
+	public void setDiscs(Bag bag) { discs = bag; }
 
+	/* SETTERS++ */
 	public void addGamePlayed() { gamesPlayed++; }
 	public void addHolesInOne(int amount) { holesInOne += amount; }
 	public void addAlbatrosses(int amount) { albatrosses += amount; }
@@ -207,17 +226,14 @@ public class Profile {
 	public void addBogeys(int amount) { bogeys += amount; }
 	public void addDoubleBogeys(int amount) { doubleBogeys += amount; }
 	public void addTripleBogeys(int amount) { tripleBogeys += amount; }
-
-	public void adjustLifetimeOverUnder(int amount) {
-		this.lifetimeOverUnder += amount; 
-	}
-	
-	public void updateAverageOverUnder() {
-		averageOverUnder = lifetimeOverUnder / gamesPlayed;
-	}
-	
+	public void addDiscToBag(Disc disc) { discs.addDisc(disc); }
+	public void adjustLifetimeOverUnder(int amount) { this.lifetimeOverUnder += amount; }
+	public void updateAverageOverUnder() { averageOverUnder = lifetimeOverUnder / gamesPlayed; }
 	public void addToLifetimeThrows(int amount) { lifetimeThrows += amount; }
 	
+	/* 
+	 * Updates the profile statistics based on a round that was played
+	 */
 	public void updateFromScorecard(ScorecardSummary summary) {
 		addAlbatrosses(summary.getAlbatrosses());
         addPars(summary.getPars());
@@ -229,7 +245,6 @@ public class Profile {
 		addHolesInOne(summary.getHolesInOne());
 		adjustLifetimeOverUnder(summary.getOverUnderPar());
 		addToLifetimeThrows(summary.getScore());
-	    addPars(summary.getPars());
 	    addGamePlayed();
 	    if (summary.getWorstHole() > worstHole){
 	        setWorstHole(summary.getWorstHole());
@@ -237,6 +252,4 @@ public class Profile {
 	    updateAverageOverUnder();
 	}
 	
-	public void addDiscToBag(Disc disc) { discs.addDisc(disc); }
-	public void setDiscs(Bag bag) { discs = bag; }
 }

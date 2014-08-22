@@ -26,10 +26,16 @@ public class Disc {
 		this.fade = fade;
 	}
 	
+	/*
+	 * Outputs to STDOUT the summary
+	 */
 	public void show() { 
 		System.out.println(getSummary());
 	}
 	
+	/*
+	 * Prettified toString()
+	 */
 	public String getSummary() {
 		return "Name: " + name + "\n" +
 			"Disc Type: " + discType.toString() + "\n" + 

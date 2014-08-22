@@ -56,6 +56,10 @@ public class Hole {
 		return obj;
 	}
 	
+	/*
+	 * Update the hole information from scorecard
+	 * Updates the stats specific to this hole
+	 */
 	public void updateFromScorecard(Scorecard scorecard) {
 		ArrayList<Integer> scores = scorecard.getScoresForHole(holeNumber);
 		for (int score : scores) {

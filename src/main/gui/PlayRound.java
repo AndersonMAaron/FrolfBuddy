@@ -6,19 +6,118 @@
 
 package main.gui;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.swing.JOptionPane;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+
+import manager.Manager;
+import frolf.Course;
+import frolf.Hole;
+import frolf.Scorecard;
+import frolf.Scorecard.ScorecardSummary;
+
 /**
  *
- * @author o607771
+ * @author Aaron Anderson
  */
 public class PlayRound extends javax.swing.JFrame {
-
+	private Course currentCourse;
+	
     /**
      * Creates new form DiscView
      */
     public PlayRound() {
         initComponents();
+        currentCourse = null;
     }
+    
+    private void scoreRound() {
+    	HashMap<String, ArrayList<Integer>> theScores
+        	= new HashMap<String, ArrayList<Integer>>();
+    	ArrayList<Integer> pars = new ArrayList<Integer>();
+    	ArrayList<Integer> score = new ArrayList<Integer>();
+    	
+    	for (int column = 1; column < tblScorecard.getColumnCount(); column++) {
 
+            score = new ArrayList<Integer>();
+
+            for (int row = 0; row < currentCourse.getNumberOfHoles(); row++) {
+                Object obj = tblScorecard.getModel().getValueAt(row, column);
+                int cell = 0;
+                if (obj instanceof Integer) { cell = (int) obj; }
+                else { cell = Integer.parseInt((String) obj); }
+
+                if (column == 1) { pars.add(cell); }
+                else { score.add(cell); }
+            }
+
+            String username = tblScorecard.getColumnName(column);
+
+            if (column != 1) { theScores.put(username, score); }
+        }
+
+        Scorecard scorecard = new Scorecard(
+                currentCourse.getName(),
+                theScores,
+                pars
+        );
+        
+        HashMap<String, ScorecardSummary> summaries = scorecard.getSummaries();
+        for (String player : summaries.keySet()) {
+        	if (Manager.getInstance().getProfiles().containsKey(player)) {
+        		Manager.getInstance().getProfiles().get(player).updateFromScorecard(summaries.get(player));
+        		System.out.println(Manager.getInstance().getProfiles().get(player).getProfileSummary());
+        	} else {
+        		int reply = 
+    				JOptionPane.showConfirmDialog(
+    					null, 
+    					"No profile was found for " + player + ", would you like to create one?", 
+    					"Profile not found", 
+    					JOptionPane.YES_NO_OPTION);
+        		if (reply == JOptionPane.YES_OPTION) {
+        			java.awt.EventQueue.invokeLater(new Runnable() {
+        	            public void run() {
+        	                new NewProfile().setVisible(true);
+        	            }
+        	        });
+        		}
+        		
+        	}
+        }
+        
+        // TODO do not clear scorecard if a new profile is being created
+        clearScorecard();
+    }
+    
+    private void loadCourse(Course course) {
+        // Clear scorecard
+        clearScorecard();
+        // Add par values to scorecard
+        for (int holeNumber = 0; holeNumber < course.getNumberOfHoles(); holeNumber++) {
+            Hole hole = course.getHole(holeNumber + 1); // +1 to match human #
+            tblScorecard.setValueAt(hole.getPar(), holeNumber, 1);
+        }
+    }
+    
+    public void clearScorecard() {
+        for (int column = 1; column < 4; column++){
+            for (int row = 0; row < 18; row++)
+            tblScorecard.setValueAt("", row, column);
+        }
+    }
+    
+    public void updateColumnTitle(int index, String title) {
+    	JTableHeader th = tblScorecard.getTableHeader();
+    	TableColumnModel tcm = th.getColumnModel();
+    	TableColumn tc = tcm.getColumn(index);
+    	tc.setHeaderValue(title);
+    	th.repaint();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -182,36 +281,69 @@ public class PlayRound extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void miFinishRoundActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miFinishRoundActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_miFinishRoundActionPerformed
+        scoreRound();
+    }
 
-    private void miLoadCourseMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_miLoadCourseMousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_miLoadCourseMousePressed
+    private void miLoadCourseMousePressed(java.awt.event.MouseEvent evt) {
+    	Object[] courseNames = Manager.getInstance().getCourseNames().toArray();
+    	String selectedCourse = (String) JOptionPane.showInputDialog(this, 
+    	        "Select a course.",
+    	        "Course Select",
+    	        JOptionPane.QUESTION_MESSAGE, 
+    	        null, 
+    	        courseNames, 
+    	        courseNames[0]);
+    	
+    	if (selectedCourse == null) { return; }
+    	currentCourse = Manager.getInstance().getCourses().get(selectedCourse); 
+    	loadCourse(Manager.getInstance().getCourses().get(selectedCourse));
+    }
 
     private void miFinishRoundMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_miFinishRoundMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_miFinishRoundMousePressed
+    }
 
     private void miHoleModeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_miHoleModeMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_miHoleModeMousePressed
+    }
 
     private void miChangePlayersMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_miChangePlayersMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_miChangePlayersMousePressed
+    }
 
     private void miClearMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_miClearMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_miClearMousePressed
+    }
 
-    private void miSelPlayer1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_miSelPlayer1MousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_miSelPlayer1MousePressed
+    private void miSelPlayer1MousePressed(java.awt.event.MouseEvent evt) {
+    	Object[] profileNames = Manager.getInstance().getProfileNames().toArray();
+    	String selectedProfile = (String) JOptionPane.showInputDialog(this, 
+    	        "Select a player.",
+    	        "Profile Select",
+    	        JOptionPane.QUESTION_MESSAGE, 
+    	        null, 
+    	        profileNames, 
+    	        profileNames[0]);
+    	
+    	if (selectedProfile == null) { return; }
+    	
+    	updateColumnTitle(2, selectedProfile);
+    }
 
     private void miSelPlayer2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_miSelPlayer2MousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_miSelPlayer2MousePressed
+    	Object[] profileNames = Manager.getInstance().getProfileNames().toArray();
+    	String selectedProfile = (String) JOptionPane.showInputDialog(this, 
+    	        "Select a player.",
+    	        "Profile Select",
+    	        JOptionPane.QUESTION_MESSAGE, 
+    	        null, 
+    	        profileNames, 
+    	        profileNames[0]);
+    	
+    	if (selectedProfile == null) { return; }
+    	
+    	updateColumnTitle(3, selectedProfile);
+    }
 
     /**
      * @param args the command line arguments

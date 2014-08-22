@@ -50,6 +50,9 @@ public class Manager {
 	public HashMap<String, Course> getCourses() { return courses; }
 	public Bag getDiscs() { return discs; }
 	
+	/*
+	 * Saves each profile loaded to JSON
+	 */
 	public void saveProfiles() {
 		for (String username : profiles.keySet()) {
 			Profile profile = profiles.get(username);
@@ -58,4 +61,37 @@ public class Manager {
 			} catch (IOException e) { e.printStackTrace(); }
 		}
 	}
+	
+	/*
+	 * Returns a list of the loaded courses' names
+	 */
+	public ArrayList<String> getCourseNames() {
+		ArrayList<String> courseNames = new ArrayList<String>();
+		for (String name : courses.keySet()) { courseNames.add(name); }
+		return courseNames;
+	}
+	
+	/*
+	 * Returns a list of the loaded profiles' names
+	 */
+	public ArrayList<String> getProfileNames() {
+		ArrayList<String> profileNames = new ArrayList<String>();
+		for (String name : profiles.keySet()) { profileNames.add(name); }
+		return profileNames;
+	}
 }
+
+/**
+ * TODO features:
+ * --Add a logger
+ * --Save each round 
+ * --Hole by hole mode
+ * --Update disc for hole recommendation
+ * --Update disc for bag recommendation
+ * --Add profile pictures to profile and JSON
+ * --Load Latitude64 discs
+ * --Load discraft discs
+ * --Load Discmania discs
+ * --Create interface for Frolf printable (show()s and getSummary()s)
+ * --Update the function comments to include @returns and such
+ */

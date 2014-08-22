@@ -48,7 +48,7 @@ public class ManualTest {
 		bag.addDisc(discs.getDisc("Innova Kite"));
 		bag.addDisc(discs.getDisc("Innova TeeBird"));
 		
-		bag.show();
+		bag.getSummary();
 		System.out.println("Testing");
 		Disc recommendedDisc = FrolfUtil.recommendDiscForBag(bag);
 		

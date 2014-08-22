@@ -1,17 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package main.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+
+import manager.Manager;
+import player.Profile;
+import discs.Disc;
+
 /**
  *
- * @author o607771
+ * @author Aaron Anderson
  */
 public class Home extends javax.swing.JFrame {
 
@@ -20,6 +21,15 @@ public class Home extends javax.swing.JFrame {
      */
     public Home() {
         initComponents();
+    }
+    
+    public void updateProfile(Profile profile) {
+    	tProfileSummary.setText(profile.getProfileSummary());
+    	DefaultListModel<String> dlm = new DefaultListModel<String>();
+    	for (Disc disc : profile.getDiscs().getDiscs()){
+    		dlm.addElement(disc.getName());
+    	}
+    	lDiscs.setModel(dlm);
     }
 
     /**
@@ -197,7 +207,7 @@ public class Home extends javax.swing.JFrame {
         mFile.setText("File");
 
         miChangeProfile.setText("Change Profile");
-        miChangeProfile.addMouseListener(new java.awt.event.MouseAdapter() {
+        miChangeProfile.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		miChangeProfileActionPerformed(e);
         	}
@@ -263,7 +273,17 @@ public class Home extends javax.swing.JFrame {
     }
 
     private void miChangeProfileActionPerformed(ActionEvent e) {
-    	//TODO pop up JOptionWindow with loaded profiles
+    	Object[] profileNames = Manager.getInstance().getProfileNames().toArray();
+    	String selectedProfile = (String) JOptionPane.showInputDialog(this, 
+    	        "Select a player.",
+    	        "Profile Select",
+    	        JOptionPane.QUESTION_MESSAGE, 
+    	        null, 
+    	        profileNames, 
+    	        profileNames[0]);
+    	
+    	if (selectedProfile == null) { return; } // Cancel
+    	updateProfile(Manager.getInstance().getProfiles().get(selectedProfile));
     }
     
     private void miCreateProfileActionPerformed(ActionEvent e) {
@@ -312,7 +332,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JButton btnRecommend;
     private javax.swing.JButton btnViewDiscs;
     private javax.swing.JButton btnViewGames;
-    private javax.swing.JList lDiscs;
+    private javax.swing.JList<String> lDiscs;
     private javax.swing.JMenu mEdit;
     private javax.swing.JMenu mFile;
     private javax.swing.JMenuBar mMenuBar;
