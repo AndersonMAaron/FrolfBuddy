@@ -44,7 +44,7 @@ public class PlayRound extends javax.swing.JFrame {
     	for (int column = 1; column < tblScorecard.getColumnCount(); column++) {
 
             score = new ArrayList<Integer>();
-
+            //TODO error guard
             for (int row = 0; row < currentCourse.getNumberOfHoles(); row++) {
                 Object obj = tblScorecard.getModel().getValueAt(row, column);
                 int cell = 0;
@@ -206,11 +206,6 @@ public class PlayRound extends javax.swing.JFrame {
         mFile.add(miLoadCourse);
 
         miFinishRound.setText("Finish Round");
-        miFinishRound.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                miFinishRoundMousePressed(evt);
-            }
-        });
         miFinishRound.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 miFinishRoundActionPerformed(evt);
@@ -299,20 +294,16 @@ public class PlayRound extends javax.swing.JFrame {
     	loadCourse(Manager.getInstance().getCourses().get(selectedCourse));
     }
 
-    private void miFinishRoundMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_miFinishRoundMousePressed
-        // TODO add your handling code here:
-    }
-
     private void miHoleModeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_miHoleModeMousePressed
-        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(null, "This feature has not yet been implemented.");
     }
 
     private void miChangePlayersMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_miChangePlayersMousePressed
-        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(null, "This feature has not yet been implemented.");
     }
 
     private void miClearMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_miClearMousePressed
-        // TODO add your handling code here:
+        clearScorecard();
     }
 
     private void miSelPlayer1MousePressed(java.awt.event.MouseEvent evt) {

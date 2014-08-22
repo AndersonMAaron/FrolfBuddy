@@ -7,7 +7,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
 import manager.Manager;
-import player.Profile;
+import util.FrolfUtil;
 import discs.Disc;
 
 /**
@@ -15,7 +15,7 @@ import discs.Disc;
  * @author Aaron Anderson
  */
 public class Home extends javax.swing.JFrame {
-
+	
     /**
      * Creates new form Home
      */
@@ -23,10 +23,10 @@ public class Home extends javax.swing.JFrame {
         initComponents();
     }
     
-    public void updateProfile(Profile profile) {
-    	tProfileSummary.setText(profile.getProfileSummary());
+    public void updateProfile() {
+    	tProfileSummary.setText(Manager.getInstance().getCurrentProfile().getProfileSummary());
     	DefaultListModel<String> dlm = new DefaultListModel<String>();
-    	for (Disc disc : profile.getDiscs().getDiscs()){
+    	for (Disc disc : Manager.getInstance().getCurrentProfile().getDiscs().getDiscs()){
     		dlm.addElement(disc.getName());
     	}
     	lDiscs.setModel(dlm);
@@ -257,7 +257,12 @@ public class Home extends javax.swing.JFrame {
     }
 
     private void btnRecommendMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRecommendMousePressed
-        // TODO add your handling code here:
+    	if (Manager.getInstance().getCurrentProfile() == null) {
+    		JOptionPane.showMessageDialog(null, "Please load a profile first.");
+    		return;
+    	}
+        Disc recommendedDisc = FrolfUtil.recommendDiscForBag(Manager.getInstance().getCurrentProfile().getDiscs());
+        JOptionPane.showMessageDialog(null, "" + recommendedDisc.getName());
     }
 
     private void btnPlayRoundMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPlayRoundMousePressed
@@ -283,7 +288,8 @@ public class Home extends javax.swing.JFrame {
     	        profileNames[0]);
     	
     	if (selectedProfile == null) { return; } // Cancel
-    	updateProfile(Manager.getInstance().getProfiles().get(selectedProfile));
+    	Manager.getInstance().setCurrentProfile(selectedProfile);
+    	updateProfile();
     }
     
     private void miCreateProfileActionPerformed(ActionEvent e) {
@@ -304,6 +310,7 @@ public class Home extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            	System.out.println(info);
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;

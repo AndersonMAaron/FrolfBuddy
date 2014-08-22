@@ -12,6 +12,7 @@ import frolf.Course;
 public class Manager {
 	private static Manager instance = null;     // Singleton instance
 	private HashMap<String, Profile> profiles;	// Player profiles
+	private Profile currentProfile;
 	private HashMap<String, Course> courses;	// Courses
 	private Bag discs;							// Disc catalog
 	
@@ -21,7 +22,8 @@ public class Manager {
 	 */
 	Manager() {
         profiles = FrolfUtil.loadProfiles();
-                
+        currentProfile = null;
+        		
 		try {
 			courses = FrolfUtil.loadCourseCatalog();
 			discs = FrolfUtil.loadDiscs();
@@ -47,8 +49,18 @@ public class Manager {
 	
 	/* GETTERS */
 	public HashMap<String, Profile> getProfiles() { return profiles; }
+	public Profile getCurrentProfile() { return currentProfile; } 
 	public HashMap<String, Course> getCourses() { return courses; }
 	public Bag getDiscs() { return discs; }
+	
+	/* SETTERS */
+	public void setCurrentProfile(String username) {
+		if (!profiles.containsKey(username)) {
+			System.out.println("Tried to set current profile to one that doesn't exist.");
+			return;
+		}
+		currentProfile = profiles.get(username);
+	}
 	
 	/*
 	 * Saves each profile loaded to JSON
