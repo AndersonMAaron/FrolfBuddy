@@ -59,6 +59,7 @@ public class Home extends javax.swing.JFrame {
         mFile = new javax.swing.JMenu();
         miChangeProfile = new javax.swing.JMenuItem();
         miCreateProfile = new javax.swing.JMenuItem();
+        miAddDisc = new javax.swing.JMenuItem();
         mEdit = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -225,10 +226,17 @@ public class Home extends javax.swing.JFrame {
         mMenuBar.add(mFile);
 
         mEdit.setText("Edit");
+        miAddDisc.setText("Add disc to profile");
+        miAddDisc.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		miAddDiscActionPerformed(e);
+        	}
+        });
+        
+        mEdit.add(miAddDisc);
         mMenuBar.add(mEdit);
-
         setJMenuBar(mMenuBar);
-
+        
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -299,6 +307,27 @@ public class Home extends javax.swing.JFrame {
             }
         });
     }
+    
+    private void miAddDiscActionPerformed(ActionEvent e) {
+    	if (Manager.getInstance().getCurrentProfile() == null) {
+    		JOptionPane.showMessageDialog(null, "No profile has been selected.");
+    		return;
+    	}
+    	
+    	Object[] discNames = Manager.getInstance().getDiscNames().toArray();
+    	String selectedDisc = (String) JOptionPane.showInputDialog(this, 
+    	        "Select the disc.",
+    	        "Add Disc to Profile",
+    	        JOptionPane.QUESTION_MESSAGE, 
+    	        null, 
+    	        discNames, 
+    	        discNames[0]);
+    	
+    	if (selectedDisc == null) { return; }
+    	Disc disc = Manager.getInstance().getDiscs().getDisc(selectedDisc);
+    	Manager.getInstance().getCurrentProfile().addDiscToBag(disc);
+    	updateProfile();
+    }
 
     /**
      * @param args the command line arguments
@@ -345,6 +374,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JMenuBar mMenuBar;
     private javax.swing.JMenuItem miChangeProfile;
     private javax.swing.JMenuItem miCreateProfile;
+    private javax.swing.JMenuItem miAddDisc;
     private javax.swing.JPanel pDiscDisplay;
     private javax.swing.JPanel pEncloser;
     private javax.swing.JPanel pProfilePic;

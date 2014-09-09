@@ -1,10 +1,14 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import javax.swing.JOptionPane;
 
 import main.gui.Home;
 import main.gui.NewProfile;
 import manager.Manager;
+import frolf.Scorecard;
 
 public class Lawnchair {
 	/**
@@ -16,6 +20,8 @@ public class Lawnchair {
 		new Lawnchair();
 		
 		int reply = JOptionPane.NO_OPTION;
+		
+		saveScorecard();
 		if (Manager.getInstance().getProfiles().size() == 2) {
 			reply = 
 				JOptionPane.showConfirmDialog(
@@ -40,6 +46,19 @@ public class Lawnchair {
 	            }
 	        });
 		}
+	}
+	
+	public static void saveScorecard() { 
+		ArrayList<Integer> aaron = new ArrayList<Integer>();
+		for (int i = 0; i < 18; i++) { aaron.add(3); }
+		ArrayList<Integer> pars = new ArrayList<Integer>();
+		for (int i = 0; i < 18; i++) { pars.add(4); }
+		HashMap<String, ArrayList<Integer>> map = new HashMap<String, ArrayList<Integer>>();
+		map.put("andersonmaaron", aaron);
+		Scorecard scorecard = new Scorecard("Griggs Reservoir Park",
+				map, pars );
+		
+		scorecard.save();
 	}
 	
 	public Lawnchair() {}

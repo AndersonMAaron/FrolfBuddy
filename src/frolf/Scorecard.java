@@ -1,9 +1,16 @@
 package frolf;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.json.simple.JSONObject;
+
+import player.Profile;
 
 public class Scorecard {
 	private String courseName; 	      // Name of the course played
@@ -23,16 +30,25 @@ public class Scorecard {
 
 	/*
 	 * Save the scorecard in JSON format
-	 * 
-	 * TODO complete method
 	 */
 	public void save() {
 		JSONObject json = new JSONObject();
 		json.put("course", courseName);
-		json.put("pars", pars.toArray());
-		for (String username : scores.keySet()) {
-			json.put(username, scores.get(username).toArray());
-		}
+		json.putAll(scores);
+		
+		HashMap<String, ArrayList<Integer>> parMap 
+			= new HashMap<String, ArrayList<Integer>>();
+		parMap.put("pars", pars);
+		json.putAll(parMap);
+		
+		try {
+            File file = new File("rounds/" + System.currentTimeMillis() + ".json");
+            FileWriter fw = new FileWriter(file.getAbsolutePath());
+            fw.write(json.toString());
+            fw.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
+        }
 	}
 	
 	/*

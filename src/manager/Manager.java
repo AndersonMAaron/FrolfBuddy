@@ -7,6 +7,7 @@ import java.util.HashMap;
 import player.Profile;
 import util.FrolfUtil;
 import bags.Bag;
+import discs.Disc;
 import frolf.Course;
 
 public class Manager {
@@ -90,6 +91,14 @@ public class Manager {
 		ArrayList<String> profileNames = new ArrayList<String>();
 		for (String name : profiles.keySet()) { profileNames.add(name); }
 		return profileNames;
+	}
+	
+	public ArrayList<String> getDiscNames() {
+		ArrayList<String> discNames = new ArrayList<String>();
+		for (Disc disc : discs.getDiscs()) {
+			discNames.add(disc.getName());
+		}
+		return discNames;
 	}
 }
 
