@@ -41,7 +41,7 @@ public class Course {
 		userWithBestScore = "N/A"; description = "Undefined course.";
 	}
 	
-	/* GETTERS */
+	/** GETTERS **/
 	public String getName() { return name; }
 	public String getAddress() { return address; }
 	public int getBestScore() { return bestScore; }
@@ -50,8 +50,11 @@ public class Course {
 	public int getTimesPlayed() { return timesPlayed; }
 	public String getUserWithBestScore() { return userWithBestScore; }
 	public String getDescription() { return description; }
-	/* GETTERS++ */
 	public int getNumberOfHoles() { return holes.size(); }
+	
+	/****************************************************
+     *  GETTERS++
+     ***************************************************/
 	
 	/*
 	 * Returns Hole with holeNumber == 'holeNumber' if exists,
@@ -77,7 +80,7 @@ public class Course {
 		return pars;
 	}
 	  
-	/* SETTERS++ */
+	/** SETTERS++ **/
 	public void addHole(Hole hole) {
 		holes.add(hole);
 	}

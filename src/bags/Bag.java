@@ -48,6 +48,36 @@ public class Bag {								     // Desired percent of bag to be:
     }
     
     /*
+     * Returns true if this bag contains the specified disc,
+     * false if it does not.
+     */
+    public boolean has(Disc disc) { 
+		HashSet<Disc> discSet = new HashSet<Disc>(discs); 
+		return discSet.contains(disc);
+	}
+    
+    /*
+     * Returns a HashMap with
+     * 	key -> String discName
+     *  value -> Disc disc
+     */
+    public HashMap<String, Disc> asHash() {
+    	HashMap<String, Disc> hash = new HashMap<String, Disc>();
+
+        Iterator<Disc> i = discs.iterator();
+        while (i.hasNext()) {
+            Disc disc = i.next();
+            hash.put(disc.getName(), disc);
+        }
+
+        return hash;
+    }
+    
+    /****************************************************
+     *  GETTERS
+     ***************************************************/
+    
+    /*
      * Prettified toString()
      */
     public String getSummary() {
@@ -65,23 +95,6 @@ public class Bag {								     // Desired percent of bag to be:
      */
     public ArrayList<Disc> getDiscs() {
         return discs;
-    }
-
-    /*
-     * Returns a HashMap with
-     * 	key -> String discName
-     *  value -> Disc disc
-     */
-    public HashMap<String, Disc> asHash() {
-    	HashMap<String, Disc> hash = new HashMap<String, Disc>();
-
-        Iterator<Disc> i = discs.iterator();
-        while (i.hasNext()) {
-            Disc disc = i.next();
-            hash.put(disc.getName(), disc);
-        }
-
-        return hash;
     }
 
     /*
@@ -192,41 +205,26 @@ public class Bag {								     // Desired percent of bag to be:
         }
         return discBag;
     }
-    
-    /*
-     * Returns true if this bag contains the specified disc,
-     * false if it does not.
-     */
-    public boolean has(Disc disc) { 
-		HashSet<Disc> discSet = new HashSet<Disc>(discs); 
-		return discSet.contains(disc);
-	}
-	
-    /*
-     * Returns a new Bag containing the Set difference
-     * Set<this> - Set<argument>
-     */
-	public Bag minus(Bag excluded) {
-		Bag returnBag = new Bag(discs);
-		returnBag.getDiscs().removeAll(excluded.getDiscs());
-		return returnBag;
-	}
 	
 	/*
 	 * Returns UNKNOWN if there is an acceptable distribution of DiscType's,
 	 * returns DiscType.X if X's ratio is sub-optimal. 
 	 */
 	public DiscType getLackingDiscType() {
-		float puttDiff = IDEAL_PUTTER_PCT - ((float)(getDiscsByType(DiscType.PUTTAPPROACH).size() * 100) / size());
-		float midDiff = IDEAL_MIDRANGE_PCT - ((float)(getDiscsByType(DiscType.MIDRANGE).size() * 100) / size());
-		float fairDiff = IDEAL_FDRIVER_PCT - ((float)(getDiscsByType(DiscType.FAIRWAYDRIVER).size() * 100) / size());
-		float distDiff = IDEAL_DDRIVER_PCT - ((float)(getDiscsByType(DiscType.DISTANCEDRIVER).size() * 100) / size());
+		int numPutters = getDiscsByType(DiscType.PUTTAPPROACH).size();
+		int numMidRangers = getDiscsByType(DiscType.MIDRANGE).size();
+		int numFDrivers = getDiscsByType(DiscType.FAIRWAYDRIVER).size();
+		int numDDrivers = getDiscsByType(DiscType.DISTANCEDRIVER).size();
+		float puttDiff = IDEAL_PUTTER_PCT - ((float)(numPutters * 100) / size());
+		float midDiff = IDEAL_MIDRANGE_PCT - ((float)(numMidRangers * 100) / size());
+		float fairDiff = IDEAL_FDRIVER_PCT - ((float)(numFDrivers * 100) / size());
+		float distDiff = IDEAL_DDRIVER_PCT - ((float)(numDDrivers * 100) / size());
 		
-		if (puttDiff > midDiff && puttDiff > fairDiff && puttDiff > distDiff) {
+		if (numPutters == 0 || (puttDiff > midDiff && puttDiff > fairDiff && puttDiff > distDiff)) {
 			return DiscType.PUTTAPPROACH;
-		} else if (midDiff > puttDiff && midDiff > fairDiff && midDiff > distDiff) {
+		} else if (numMidRangers == 0 || (midDiff > puttDiff && midDiff > fairDiff && midDiff > distDiff)) {
 			return DiscType.MIDRANGE;
-		} else if (fairDiff > puttDiff && fairDiff > midDiff && fairDiff > distDiff) {
+		} else if (numFDrivers == 0 || (fairDiff > puttDiff && fairDiff > midDiff && fairDiff > distDiff)) {
 			return DiscType.FAIRWAYDRIVER;
 		} else {
 			return DiscType.DISTANCEDRIVER;
@@ -257,5 +255,15 @@ public class Bag {								     // Desired percent of bag to be:
 		}
 		
 		return Stability.UNKNOWN;
+	}
+	
+    /*
+     * Returns a new Bag containing the Set difference
+     * Set<this> - Set<argument>
+     */
+	public Bag minus(Bag excluded) {
+		Bag returnBag = new Bag(discs);
+		returnBag.getDiscs().removeAll(excluded.getDiscs());
+		return returnBag;
 	}
 }

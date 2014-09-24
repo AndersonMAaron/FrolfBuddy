@@ -11,6 +11,9 @@ import manager.Manager;
 import frolf.Scorecard;
 
 public class Lawnchair {
+	
+	public Lawnchair() {}
+	
 	/**
 	 * If no profile have been defined, prompts user if they wish to create one.
 	 * Otherwise, starts at the Home screen 
@@ -60,6 +63,4 @@ public class Lawnchair {
 		
 		scorecard.save();
 	}
-	
-	public Lawnchair() {}
 }

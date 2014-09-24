@@ -13,9 +13,9 @@ import org.json.simple.JSONObject;
 import player.Profile;
 
 public class Scorecard {
-	private String courseName; 	      // Name of the course played
+	private String courseName; 	      					// Name of the course played
 	private HashMap<String, ArrayList<Integer>> scores; // Player scores for each hole
-	private ArrayList<Integer> pars;  // Course pars for each hole
+	private ArrayList<Integer> pars;  					// Course pars for each hole
 
 	/* 
 	 * Completely defined constructor
@@ -160,7 +160,7 @@ public class Scorecard {
             this.worstHole = worstHole;
 		}
 
-		/* GETTERS */
+		/** GETTERS **/
 		public String getCourseName() { return courseName; }
 		public int getHolesInOne() { return holesInOne; }
 		public int getPars() { return pars;  }

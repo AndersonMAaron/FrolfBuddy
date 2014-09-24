@@ -36,7 +36,6 @@ public class Hole {
 	
 	/*
 	 * Returns the hole in its specified JSON format
-	 * TODO complete method
 	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject toJson() {
@@ -71,7 +70,7 @@ public class Hole {
 		}
 	}
 	
-	/* GETTERS */
+	/** GETTERS **/
     public int getHoleNumber() { return holeNumber; }
     public HoleType getHoleType() { return holeType; }
     public int getDistance() { return distance; }
@@ -83,7 +82,7 @@ public class Hole {
     public int getWorstScore() { return worstScore; }
     public String getDescription() { return description; }
     
-    /* SETTERS++ */
+    /** SETTERS++ **/
     public void addHolesInOne(int amount) { holesInOne += amount; }
     public void addTimePlayed() { timesPlayed++; }
 }

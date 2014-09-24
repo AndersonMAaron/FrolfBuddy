@@ -9,7 +9,7 @@ public class Disc {
 	protected int glide;   				 // Glide rating of disc (0-7)
 	protected int turn;					 // Turn rating of disc (-4, 4)
 	protected int fade;					 // Fade rating of disc (-4, 4)
-	//TODO add PlasticType. Check differences between manufacturer?
+	//TODO add PlasticType. Will be multiple. Differences between manufacturer?
 
 	/*
 	 * Completely defined constructor
@@ -47,7 +47,7 @@ public class Disc {
 			"Fade: " + fade + "\n";
 	}
 	
-	/* GETTERS */
+	/** GETTERS *(*/
 	public String getName() { return name; }
 	public DiscType getDiscType() { return discType; }
 	public Stability getStability() { return stability; }
@@ -57,7 +57,7 @@ public class Disc {
 	public int getTurn() { return turn; }
 	public int getFade() { return fade; }
 	
-	/* SETTERS */
+	/** SETTERS **/
 	public void setName(String name) { this.name = name; }
 	public void setDiscType(DiscType discType) { this.discType = discType; }
 	public void setStability(Stability stability) { this.stability = stability; }

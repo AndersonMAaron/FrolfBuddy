@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import player.Profile;
 import bags.Bag;
@@ -25,6 +27,7 @@ import discs.Stability;
 import frolf.Course;
 import frolf.Hole;
 import frolf.HoleType;
+import frolf.Scorecard;
 
 public class FrolfUtil {
 	final static String COURSE_ROOT = "courses/"; 
@@ -36,7 +39,15 @@ public class FrolfUtil {
 	public final static int MID_MAX_DIST = 250;
 	public final static int FAIR_MAX_DIST = 320;
 	
+	private final static Logger LOGGER = Logger.getLogger( FrolfUtil.class.getName() );
+
+	
+	/*
+	 * Forms and returns a Disc data model from a specified JSON   
+	 */
 	public static Disc readDiscFromFile(String filename) throws org.json.simple.parser.ParseException {
+		LOGGER.log(Level.INFO, "Reading disc JSON from file '" + filename + "'");
+		
 		JSONObject json = new JSONObject();
 		try {
 			json = (JSONObject) new JSONParser().parse(new FileReader(filename));
@@ -160,10 +171,44 @@ public class FrolfUtil {
 				break;
 		}
 		
+		LOGGER.log(Level.INFO, "Created disc '" + disc.getName() + "'");
 		return disc;
 	}
-        
+	
+	/*
+	 * Forms and returns a Scorecard data model from a specified JSON   
+	 */
+	public static Scorecard readRoundFromFile(File filename) {
+		JSONObject json = new JSONObject();
+		try {
+			LOGGER.log(Level.INFO, "Reading round JSON from file '" + filename + "'");
+			json = (JSONObject) new JSONParser().parse(new FileReader(filename));
+		} catch (FileNotFoundException e) { e.printStackTrace();
+		} catch (IOException e) { e.printStackTrace(); 
+		} catch (ParseException e) { e.printStackTrace(); }
+		
+		Set<String> players = json.keySet();
+		players.remove("pars"); players.remove("course");
+		HashMap<String, ArrayList<Integer>> scores = new HashMap<String, ArrayList<Integer>>();
+		for (String player : players) { 
+			LOGGER.log(Level.INFO, "Reading scores for player '" + player + "'");
+			scores.put(player, (ArrayList<Integer>)json.get(player));
+		}
+		
+		LOGGER.log(Level.INFO, "Finished reading disc JSON '" + filename + "'");
+		return new Scorecard(
+			(String)json.get("course"),
+			scores,
+			(ArrayList<Integer>)json.get("pars")
+		);
+	}
+    
+	/*
+	 * Forms and returns Profile data models from a specified directory   
+	 */
     public static HashMap<String, Profile> loadProfiles() {
+		LOGGER.log(Level.INFO, "Loading player profiles..");
+
         HashMap<String, Profile> profiles = new HashMap<String, Profile>();
         File[] proFiles = new File("profiles").listFiles();
         
@@ -171,15 +216,20 @@ public class FrolfUtil {
             try {
             	if (!file.getCanonicalPath().endsWith(".json")) { continue; }
                 Profile profile = new Profile((JSONObject) new JSONParser().parse(new FileReader(file)));
+    			LOGGER.log(Level.INFO, "Loaded player '" + profile.getUsername() + "'");
                 profiles.put(profile.getUsername(), profile);
             } catch (IOException ex) {
-                Logger.getLogger(FrolfUtil.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             } catch (org.json.simple.parser.ParseException e) { e.printStackTrace(); }
         }
+        
+		LOGGER.log(Level.INFO, "Finished loading profiles");
         return profiles;
     }
 	
 	public static Bag loadDiscs() throws IOException {
+		LOGGER.log(Level.INFO, "Loading disc catalog..");
+
 		Bag allDisks = new Bag();
 		
 		File[] discFiles = new File("discs/innova").listFiles();
@@ -188,15 +238,21 @@ public class FrolfUtil {
 			try {
 				disc = readDiscFromFile("discs/innova/" + file.getName());
 			} catch (org.json.simple.parser.ParseException e) { e.printStackTrace(); }
-			if (disc != null) { allDisks.addDisc(disc); }
+			
+			if (disc != null) { 
+				allDisks.addDisc(disc);
+				LOGGER.log(Level.INFO, "Loaded disc '" + disc.getName() + "'");
+			}
 		}
 		
+		LOGGER.log(Level.INFO, "Finished loading discs");
 		return allDisks;
 	}
 	
 	public static final HashMap<String, Course> loadCourseCatalog() throws IOException {
-		HashMap<String, Course> courses = new HashMap<String, Course>();
+		LOGGER.log(Level.INFO, "Loading course catalog..");
 		
+		HashMap<String, Course> courses = new HashMap<String, Course>();
 		JSONParser parser = new JSONParser();
 
 		File[] files = new File(COURSE_ROOT).listFiles();
@@ -208,20 +264,24 @@ public class FrolfUtil {
 	        		
 	        		try { // Course definition
 						if (!definitionFile.getCanonicalPath().contains("course.json")) {
+							LOGGER.log(Level.INFO, "Adding hole to course '" + course.getName() + "'");
 							course.addHole(readHole(definitionFile));
 						} else { // Hole definition
 													}
 					} catch (IOException e) {e.printStackTrace();}
 	        	}
-
+	        	
     			courses.put(course.getName(), course);
+    			LOGGER.log(Level.INFO, "Loaded course '" + course.getName() + "'");
 	        } else {/* Do nothing */}
 	    }
-		
+		LOGGER.log(Level.INFO, "Loaded course catalog");
 		return courses;
 	}
 	
 	public static final Course readCourse(File definitionFile){
+		LOGGER.log(Level.INFO, "Reading course from file '" + definitionFile + "'");
+		
 		JSONParser parser = new JSONParser();
 		JSONObject jsonObject = null;
 		try {
@@ -230,7 +290,7 @@ public class FrolfUtil {
 		} catch (IOException e) { e.printStackTrace();
 		} catch (org.json.simple.parser.ParseException e) { e.printStackTrace(); }
 		
-		return new Course(
+		Course course = new Course(
 			(String)jsonObject.get("name"),
 			(String)jsonObject.get("address"),
 			(int)((long)jsonObject.get("bestScore")),
@@ -241,9 +301,14 @@ public class FrolfUtil {
 			(String)jsonObject.get("userWithBestScore"),
 			(String)jsonObject.get("description")
 		);
+		LOGGER.log(Level.INFO, "Created course '" + course.getName() + "'");
+		
+		return course;
 	}
 	
 	public static final Hole readHole(File definitionFile) {
+		LOGGER.log(Level.INFO, "Reading hole JSON from file '" + definitionFile + "'");
+		
 		JSONParser parser = new JSONParser();
 		JSONObject jsonObject = null;
 		try {
@@ -280,7 +345,7 @@ public class FrolfUtil {
 				System.out.println("Unknown hole type");
 		}
 		
-		return new Hole(
+		Hole hole = new Hole(
 			(int)((long)jsonObject.get("holeNumber")),
 			holeType,
 			(int)((long)jsonObject.get("distance")),
@@ -292,9 +357,13 @@ public class FrolfUtil {
 			(int)((long)jsonObject.get("worstScore")),
 			(String)jsonObject.get("description")
 		);
+		
+		LOGGER.log(Level.INFO, "Created hole '" + hole.getHoleNumber() + "'");
+		return hole;
 	}
 	
 	public static ArrayList<String> readDiscsForUser(String username) {
+		LOGGER.log(Level.INFO, "Loading discs for user '" + username + "'");
 		ArrayList<String> discNames = new ArrayList<String>();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader("bags/" + username + "/bag.txt"));
@@ -306,17 +375,21 @@ public class FrolfUtil {
 		catch (FileNotFoundException e) { e.printStackTrace(); } 
 		catch (IOException e) { e.printStackTrace(); }
 		
+		LOGGER.log(Level.INFO, "Loaded " + discNames.size() + " discs for user '" + username + "'");
 		return discNames;
 	}
 	
 	public static Disc recommendDiscForBag(Bag bag) {
+		LOGGER.log(Level.INFO, "Selecting criteria for disc to complement bag. Here be dragons..");
+
 		Map<String, Object> criteria = new HashMap<String, Object>();
 		DiscType suggestDiscType = bag.getLackingDiscType();
 
 		if (suggestDiscType != DiscType.UNKNOWN) {
 			criteria.put("discType", suggestDiscType);
 			criteria.put("stability", bag.getLackingStabilityForType(suggestDiscType));
-		} else { // They aren't lacking a disc type 
+		} else { // They aren't lacking a disc type
+			//TODO will this even get called? At least one disc type will be selected
 			Stability suggestStability = bag.getLackingStabilityForType(DiscType.MIDRANGE);
 			
 			if (suggestStability == Stability.UNKNOWN) { // Then check fairway drivers
@@ -340,11 +413,13 @@ public class FrolfUtil {
 			System.out.println("REC stability: " + suggestStability);
 		}
 		
-		System.out.println("REC discType: " + suggestDiscType.toString());
+		LOGGER.log(Level.INFO, "Criteria for disc recommendation: " + criteria.toString());
 		return getDiscByCriteria(criteria);
 	}
 
 	public static Disc getDiscByCriteria(Map<String, Object> criteria) {
+		LOGGER.log(Level.INFO, "Selecting a disc with criteria: '" + criteria.toString() + "'");
+		
 		// Arbitrary outside of not being a possible disc definition value
 		final int INT_NOT_DEFINED = 100; 
 		
@@ -381,37 +456,44 @@ public class FrolfUtil {
 
 
 		if (manufacturer != null) {
+			LOGGER.log(Level.INFO, "Filtering to discs only manufactured by '" + manufacturer + "'");
 			filteredDiscs = filteredDiscs.getDiscsFromManufacturer(manufacturer);
 		}
 		
 		if (discType != null) { 
+			LOGGER.log(Level.INFO, "Filtering to discs of type '" + discType + "'");
 			filteredDiscs = filteredDiscs.getDiscsByType(discType); 
 		}
 		
 		if (stability != null) {
+			LOGGER.log(Level.INFO, "Filtering to discs with stability '" + stability + "'");
 			filteredDiscs = filteredDiscs.getDiscsWithStability(stability);
 		}
 		
 		if (speed != INT_NOT_DEFINED) {
+			LOGGER.log(Level.INFO, "Filtering to discs with speed '" + speed + "'");
 			filteredDiscs = filteredDiscs.getDiscsWithSpeed(speed);
 		}
 		
 		if (glide != INT_NOT_DEFINED) {
+			LOGGER.log(Level.INFO, "Filtering to discs with glide '" + glide + "'");
 			filteredDiscs = filteredDiscs.getDiscsWithGlide(glide);
 		}
 		
 		if (turn != INT_NOT_DEFINED) {
+			LOGGER.log(Level.INFO, "Filtering to discs with turn '" + turn + "'");
 			filteredDiscs = filteredDiscs.getDiscsWithTurn(turn);
 		}
 		
 		if (fade != INT_NOT_DEFINED) {
+			LOGGER.log(Level.INFO, "Filtering to discs with fade '" + fade + "'");
 			filteredDiscs = filteredDiscs.getDiscsWithFade(fade);
 		}
 		
 		// Any discs reamining in 'filteredDiscs' match the criteria
 		Random random = new Random();
 		int numDiscs = filteredDiscs.size();
-		System.out.println("numDiscs: " + numDiscs);
+		LOGGER.log(Level.INFO, "" + numDiscs + " meet the criteria. Selecting one randomly");
 		return filteredDiscs.getDiscs().get(random.nextInt(numDiscs));
 	}
 	
@@ -421,6 +503,8 @@ public class FrolfUtil {
 	 * TODO make a "best guess" if criteria aren't met.
 	 */
 	public static Disc recommendDiscForHole(Bag bag, Hole hole) {
+		LOGGER.log(Level.INFO, "Populating criteria for hole '" + hole.getHoleNumber() + "' to recommend a disc.");
+		
 		Map<String, Object> criteria = new HashMap<String, Object>();
 		int distance = hole.getDistance();
 		
@@ -444,6 +528,7 @@ public class FrolfUtil {
 				break;
 		}
 
+		LOGGER.log(Level.INFO, "Criteria for disc for hole '" + hole.getHoleNumber() + "': " + criteria.toString());
 		return getDiscByCriteria(criteria);
 	}
 }

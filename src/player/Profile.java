@@ -13,6 +13,7 @@ import discs.Disc;
 import frolf.Scorecard.ScorecardSummary;
 
 public class Profile {
+	
 	protected String username;
 	protected String displayName;
 	protected Date startDate;
@@ -27,7 +28,7 @@ public class Profile {
     protected int pars;
 	protected Bag discs;
 	protected float averageOverUnder;
-	// Hidden from user
+	// Hidden from user so they don't feel bad
 	private int lifetimeOverUnder;
 	private int bogeys;
 	private int doubleBogeys;
@@ -181,7 +182,7 @@ public class Profile {
         }
     }
 	
-    /* GETTERS */
+    /** GETTERS **/
 	public String getUsername() { return username; }
 	public String getDisplayName() { return displayName; }
 	public Date getStartDate() { return startDate; }
@@ -203,7 +204,7 @@ public class Profile {
 	protected int getLifetimeThrows() { return lifetimeThrows; }
 	protected float getAverageOverUnder() { return averageOverUnder; }
 	
-	/* SETTERS */
+	/** SETTERS **/
 	public void setDisplayName(String displayName) 
 		{ this.displayName = displayName; }
 	public void setIsRightHanded(boolean isRightHanded) 
@@ -216,7 +217,7 @@ public class Profile {
 		{ this.worstHole = worstHole; }
 	public void setDiscs(Bag bag) { discs = bag; }
 
-	/* SETTERS++ */
+	/** SETTERS++ **/
 	public void addGamePlayed() { gamesPlayed++; }
 	public void addHolesInOne(int amount) { holesInOne += amount; }
 	public void addAlbatrosses(int amount) { albatrosses += amount; }
@@ -251,5 +252,4 @@ public class Profile {
 	    }
 	    updateAverageOverUnder();
 	}
-	
 }

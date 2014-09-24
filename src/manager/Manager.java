@@ -48,13 +48,13 @@ public class Manager {
 		return instance;
 	}
 	
-	/* GETTERS */
+	/** GETTERS **/
 	public HashMap<String, Profile> getProfiles() { return profiles; }
 	public Profile getCurrentProfile() { return currentProfile; } 
 	public HashMap<String, Course> getCourses() { return courses; }
 	public Bag getDiscs() { return discs; }
 	
-	/* SETTERS */
+	/** SETTERS **/
 	public void setCurrentProfile(String username) {
 		if (!profiles.containsKey(username)) {
 			System.out.println("Tried to set current profile to one that doesn't exist.");
@@ -105,7 +105,6 @@ public class Manager {
 /**
  * TODO features:
  * --Add a logger
- * --Save each round 
  * --Hole by hole mode
  * --Update disc for hole recommendation
  * --Update disc for bag recommendation

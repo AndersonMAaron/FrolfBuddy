@@ -2,6 +2,7 @@ package main.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
@@ -9,6 +10,7 @@ import javax.swing.JOptionPane;
 import manager.Manager;
 import util.FrolfUtil;
 import discs.Disc;
+import frolf.Scorecard;
 
 /**
  *
@@ -282,7 +284,17 @@ public class Home extends javax.swing.JFrame {
     }
 
     private void btnViewGamesMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnViewGamesMousePressed
-        // TODO add your handling code here:
+    	File[] gameFiles = new File("rounds").listFiles();
+    	File selectedGame = (File) JOptionPane.showInputDialog(this, 
+    	        "Select a game.",
+    	        "Game View Select",
+    	        JOptionPane.QUESTION_MESSAGE, 
+    	        null, 
+    	        gameFiles, 
+    	        gameFiles[0]);
+    	
+    	Scorecard round = FrolfUtil.readRoundFromFile(selectedGame);
+    	System.out.println("");
     }
 
     private void miChangeProfileActionPerformed(ActionEvent e) {
