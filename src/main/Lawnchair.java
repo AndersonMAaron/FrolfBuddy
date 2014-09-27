@@ -2,16 +2,20 @@ package main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
 import main.gui.Home;
 import main.gui.NewProfile;
 import manager.Manager;
+import util.FrolfUtil;
 import frolf.Scorecard;
 
 public class Lawnchair {
-	
+	private final static Logger LOGGER = Logger.getLogger( FrolfUtil.class.getName() );
+
 	public Lawnchair() {}
 	
 	/**
@@ -22,10 +26,12 @@ public class Lawnchair {
 	public static void main(String[] args) {
 		new Lawnchair();
 		
+		LOGGER.log(Level.INFO, "INIT. Sitting in Lawnchair.");
 		int reply = JOptionPane.NO_OPTION;
 		
 		saveScorecard();
 		if (Manager.getInstance().getProfiles().size() == 2) {
+			LOGGER.log(Level.INFO, "No profiles found. Prompting user to create one.");
 			reply = 
 				JOptionPane.showConfirmDialog(
 					null, 
@@ -36,6 +42,7 @@ public class Lawnchair {
 		}
 		
 		if(reply == JOptionPane.YES_OPTION) {
+			LOGGER.log(Level.INFO, "INIT. User selected yes. Opening new profile page.");
 			java.awt.EventQueue.invokeLater(new Runnable() {
 	            public void run() {
 	                new NewProfile().setVisible(true);
@@ -43,6 +50,7 @@ public class Lawnchair {
 	        });
 		}
 		else {
+			LOGGER.log(Level.INFO, "INIT. Starting app home.");
 			java.awt.EventQueue.invokeLater(new Runnable() {
 	            public void run() {
 	                new Home().setVisible(true);
@@ -51,6 +59,7 @@ public class Lawnchair {
 		}
 	}
 	
+	//TODO why dis here?
 	public static void saveScorecard() { 
 		ArrayList<Integer> aaron = new ArrayList<Integer>();
 		for (int i = 0; i < 18; i++) { aaron.add(3); }
