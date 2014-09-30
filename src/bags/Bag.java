@@ -35,6 +35,7 @@ public class Bag {								     // Desired percent of bag to be:
      */
     public Bag(ArrayList<Disc> discs) {
     	this.discs = discs; 
+    	LOGGER = Logger.getLogger( Bag.class.getName() );
     }
 
     /*

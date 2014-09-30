@@ -35,6 +35,9 @@ public class PlayRound extends javax.swing.JFrame {
         currentCourse = null;
     }
     
+    /*
+     * TODO Bro, this needs to be broken out. What were you thinking?
+     */
     private void scoreRound() {
     	HashMap<String, ArrayList<Integer>> theScores
         	= new HashMap<String, ArrayList<Integer>>();
@@ -55,7 +58,8 @@ public class PlayRound extends javax.swing.JFrame {
                 else { score.add(cell); }
             }
 
-            String username = tblScorecard.getColumnName(column);
+//            String username = tblScorecard.getColumnName(column);
+            String username = (String) tblScorecard.getColumnModel().getColumn(column).getHeaderValue();
 
             if (column != 1) { theScores.put(username, score); }
         }
@@ -277,6 +281,7 @@ public class PlayRound extends javax.swing.JFrame {
 
     private void miFinishRoundActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miFinishRoundActionPerformed
         scoreRound();
+        Manager.getInstance().saveProfiles();
     }
 
     private void miLoadCourseMousePressed(java.awt.event.MouseEvent evt) {

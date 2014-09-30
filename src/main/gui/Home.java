@@ -17,14 +17,14 @@ import frolf.Scorecard;
  * @author Aaron Anderson
  */
 public class Home extends javax.swing.JFrame {
-	
+
     /**
      * Creates new form Home
      */
     public Home() {
         initComponents();
     }
-    
+
     public void updateProfile() {
     	tProfileSummary.setText(Manager.getInstance().getCurrentProfile().getProfileSummary());
     	DefaultListModel<String> dlm = new DefaultListModel<String>();
@@ -47,7 +47,6 @@ public class Home extends javax.swing.JFrame {
         pProfilePic = new javax.swing.JPanel();
         pDiscDisplay = new javax.swing.JPanel();
         sDiscs = new javax.swing.JScrollPane();
-        lDiscs = new javax.swing.JList();
         pProfileSummary = new javax.swing.JPanel();
         sProfileSummary = new javax.swing.JScrollPane();
         tProfileSummary = new javax.swing.JTextArea();
@@ -63,6 +62,7 @@ public class Home extends javax.swing.JFrame {
         miCreateProfile = new javax.swing.JMenuItem();
         miAddDisc = new javax.swing.JMenuItem();
         mEdit = new javax.swing.JMenu();
+        lDiscs = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -216,7 +216,7 @@ public class Home extends javax.swing.JFrame {
         	}
         });
         mFile.add(miChangeProfile);
-        
+
         miCreateProfile.setText("Create Profile");
         miCreateProfile.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -224,7 +224,7 @@ public class Home extends javax.swing.JFrame {
         	}
         });
         mFile.add(miCreateProfile);
-        
+
         mMenuBar.add(mFile);
 
         mEdit.setText("Edit");
@@ -234,11 +234,11 @@ public class Home extends javax.swing.JFrame {
         		miAddDiscActionPerformed(e);
         	}
         });
-        
+
         mEdit.add(miAddDisc);
         mMenuBar.add(mEdit);
         setJMenuBar(mMenuBar);
-        
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -285,33 +285,33 @@ public class Home extends javax.swing.JFrame {
 
     private void btnViewGamesMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnViewGamesMousePressed
     	File[] gameFiles = new File("rounds").listFiles();
-    	File selectedGame = (File) JOptionPane.showInputDialog(this, 
+    	File selectedGame = (File) JOptionPane.showInputDialog(this,
     	        "Select a game.",
     	        "Game View Select",
-    	        JOptionPane.QUESTION_MESSAGE, 
-    	        null, 
-    	        gameFiles, 
+    	        JOptionPane.QUESTION_MESSAGE,
+    	        null,
+    	        gameFiles,
     	        gameFiles[0]);
-    	
+
     	Scorecard round = FrolfUtil.readRoundFromFile(selectedGame);
-    	System.out.println("");
+    	JOptionPane.showMessageDialog(this, round.toJson().toString());
     }
 
     private void miChangeProfileActionPerformed(ActionEvent e) {
     	Object[] profileNames = Manager.getInstance().getProfileNames().toArray();
-    	String selectedProfile = (String) JOptionPane.showInputDialog(this, 
+    	String selectedProfile = (String) JOptionPane.showInputDialog(this,
     	        "Select a player.",
     	        "Profile Select",
-    	        JOptionPane.QUESTION_MESSAGE, 
-    	        null, 
-    	        profileNames, 
+    	        JOptionPane.QUESTION_MESSAGE,
+    	        null,
+    	        profileNames,
     	        profileNames[0]);
-    	
+
     	if (selectedProfile == null) { return; } // Cancel
     	Manager.getInstance().setCurrentProfile(selectedProfile);
     	updateProfile();
     }
-    
+
     private void miCreateProfileActionPerformed(ActionEvent e) {
     	java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -319,22 +319,22 @@ public class Home extends javax.swing.JFrame {
             }
         });
     }
-    
+
     private void miAddDiscActionPerformed(ActionEvent e) {
     	if (Manager.getInstance().getCurrentProfile() == null) {
     		JOptionPane.showMessageDialog(null, "No profile has been selected.");
     		return;
     	}
-    	
+
     	Object[] discNames = Manager.getInstance().getDiscNames().toArray();
-    	String selectedDisc = (String) JOptionPane.showInputDialog(this, 
+    	String selectedDisc = (String) JOptionPane.showInputDialog(this,
     	        "Select the disc.",
     	        "Add Disc to Profile",
-    	        JOptionPane.QUESTION_MESSAGE, 
-    	        null, 
-    	        discNames, 
+    	        JOptionPane.QUESTION_MESSAGE,
+    	        null,
+    	        discNames,
     	        discNames[0]);
-    	
+
     	if (selectedDisc == null) { return; }
     	Disc disc = Manager.getInstance().getDiscs().getDisc(selectedDisc);
     	Manager.getInstance().getCurrentProfile().addDiscToBag(disc);
@@ -347,7 +347,7 @@ public class Home extends javax.swing.JFrame {
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {

@@ -17,7 +17,7 @@ public class Scorecard {
 	private HashMap<String, ArrayList<Integer>> scores; // Player scores for each hole
 	private ArrayList<Integer> pars;  					// Course pars for each hole
 
-	/* 
+	/*
 	 * Completely defined constructor
 	 */
 	public Scorecard(String courseName,
@@ -32,15 +32,8 @@ public class Scorecard {
 	 * Save the scorecard in JSON format
 	 */
 	public void save() {
-		JSONObject json = new JSONObject();
-		json.put("course", courseName);
-		json.putAll(scores);
-		
-		HashMap<String, ArrayList<Integer>> parMap 
-			= new HashMap<String, ArrayList<Integer>>();
-		parMap.put("pars", pars);
-		json.putAll(parMap);
-		
+		JSONObject json = toJson();
+
 		try {
             File file = new File("rounds/" + System.currentTimeMillis() + ".json");
             FileWriter fw = new FileWriter(file.getAbsolutePath());
@@ -50,11 +43,24 @@ public class Scorecard {
             Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
         }
 	}
-	
+
+	public JSONObject toJson(){
+		JSONObject json = new JSONObject();
+		json.put("course", courseName);
+		json.putAll(scores);
+
+		HashMap<String, ArrayList<Integer>> parMap
+			= new HashMap<String, ArrayList<Integer>>();
+		parMap.put("pars", pars);
+		json.putAll(parMap);
+
+		return json;
+	}
+
 	/*
 	 * Returns the scores for a specific hole.
 	 * TODO create a HoleSummary class and ScorecardSummary
-	 * 		will have a List<HoleSummary> 
+	 * 		will have a List<HoleSummary>
 	 */
 	public ArrayList<Integer> getScoresForHole(int holeNumber) {
 		ArrayList<Integer> holeScores = new ArrayList<Integer>();
@@ -67,7 +73,7 @@ public class Scorecard {
 	/*
 	 * Returns a HashMap where
 	 *  key -> Profile username
-	 *  value -> ScorecardSummary of the round 
+	 *  value -> ScorecardSummary of the round
 	 */
 	public HashMap<String, ScorecardSummary> getSummaries() {
 
@@ -83,8 +89,8 @@ public class Scorecard {
 
 				int thisPar = pars.get(hole);
 				int thisScore = profileScores.get(hole);
-				
-				if (thisScore == 1) { holesInOne++; }   
+
+				if (thisScore == 1) { holesInOne++; }
                 if (thisScore > worstHole) { worstHole = thisScore; }
 
 				parScore += thisPar;
@@ -124,7 +130,7 @@ public class Scorecard {
 		return summaries;
 	}
 
-	/** 
+	/**
 	 * @class ScorecardSummary
 	 * @purpose Translation message from the Scorecard
 	 * to the profile. Used to update profile statistics.

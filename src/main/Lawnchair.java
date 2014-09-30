@@ -23,14 +23,14 @@ public class Lawnchair {
 	 * Otherwise, starts at the Home screen 
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main (String[] args) {
 		new Lawnchair();
 		
 		LOGGER.log(Level.INFO, "INIT. Sitting in Lawnchair.");
 		int reply = JOptionPane.NO_OPTION;
 		
 		saveScorecard();
-		if (Manager.getInstance().getProfiles().size() == 2) {
+		if (Manager.getInstance().getProfiles().size() == 0) {
 			LOGGER.log(Level.INFO, "No profiles found. Prompting user to create one.");
 			reply = 
 				JOptionPane.showConfirmDialog(

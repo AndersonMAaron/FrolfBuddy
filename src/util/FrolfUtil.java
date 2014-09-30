@@ -13,6 +13,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import manager.Manager;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -107,69 +109,97 @@ public class FrolfUtil {
 		switch (manufacturerName.toLowerCase()) {
 			case "innova":
 				manufacturer = Manufacturer.INNOVA;
-				PlasticType plasticType = null;
-				switch(((String) json.get("plastic")).toLowerCase()) {
-					case "dx":
-						plasticType = PlasticType.DX;
-						break;
-					case "champion":
-						plasticType = PlasticType.CHAMPION;
-						break;
-					case "star": 
-						plasticType = PlasticType.STAR;
-						break;
-					case "pro": 
-						plasticType = PlasticType.PRO;
-						break;
-					default:
-						plasticType = PlasticType.DX;
-						break;
-				}
-				
-				int speed;
-				String speedS = (String) json.get("speed");
-				if (speedS.compareTo("O") == 0 || speedS.compareTo("-O") == 0 || speedS.compareTo("") == 0){
-					speed = 0;
-				} else {
-					speed = Integer.parseInt(speedS);
-				}				
-				
-				int glide;
-				String glideS = (String) json.get("glide");
-				if (glideS.compareTo("O") == 0 || glideS.compareTo("-O") == 0 || glideS.compareTo("") == 0){
-					glide = 0;
-				} else {
-					glide = Integer.parseInt(glideS);
-				}
-				
-				int turn;
-				String turnS = (String) json.get("turn");
-				if (turnS.compareTo("O") == 0 || turnS.compareTo("-O") == 0 || turnS.compareTo("") == 0){
-					turn = 0;
-				} else {
-					turn = Integer.parseInt(turnS);
-				}
-				
-				int fade;
-				String fadeS = (String) json.get("fade");
-				if (fadeS.compareTo("O") == 0 || fadeS.compareTo("-O") == 0 || fadeS.compareTo("") == 0){
-					fade = 0;
-				} else {
-					fade = Integer.parseInt(fadeS);
-				}
-				
-				disc = new Disc(
-					(String) json.get("name"),
-					manufacturer,
-					discType,
-					stability,
-					speed,
-					glide,
-					turn,
-					fade
-				);
+				break;
+			case "discraft":
+				manufacturer = Manufacturer.DISCRAFT;
+				break;
+			case "discmania": 
+				manufacturer = Manufacturer.DISCMANIA;
+				break;
+			case "westside": 
+				manufacturer = Manufacturer.WESTSIDE;
+				break;
+			case "gateway":
+				manufacturer = Manufacturer.GATEWAY;
+				break;
+			case "latitude64":
+				manufacturer = Manufacturer.LATITUDE64;
+				break;
+			case "millennium":
+				manufacturer = Manufacturer.MILLENNIUM;
+				break;
+			case "mvp": 
+				manufacturer = Manufacturer.MVP;
+				break;
+			case "prodigy":
+				manufacturer = Manufacturer.PRODIGY;
+				break;
+			case "vibram":
+				manufacturer = Manufacturer.VIBRAM;
 				break;
 		}
+		PlasticType plasticType = null;
+		switch(((String) json.get("plastic")).toLowerCase()) {
+			case "dx":
+				plasticType = PlasticType.DX;
+				break;
+			case "champion":
+				plasticType = PlasticType.CHAMPION;
+				break;
+			case "star": 
+				plasticType = PlasticType.STAR;
+				break;
+			case "pro": 
+				plasticType = PlasticType.PRO;
+				break;
+			default:
+				plasticType = PlasticType.DX;
+				break;
+		}
+		
+		int speed;
+		String speedS = (String) json.get("speed");
+		if (speedS.compareTo("O") == 0 || speedS.compareTo("-O") == 0 || speedS.compareTo("") == 0){
+			speed = 0;
+		} else {
+			speed = Integer.parseInt(speedS);
+		}				
+		
+		int glide;
+		String glideS = (String) json.get("glide");
+		if (glideS.compareTo("O") == 0 || glideS.compareTo("-O") == 0 || glideS.compareTo("") == 0){
+			glide = 0;
+		} else {
+			glide = Integer.parseInt(glideS);
+		}
+		
+		int turn;
+		String turnS = (String) json.get("turn");
+		if (turnS.compareTo("O") == 0 || turnS.compareTo("-O") == 0 || turnS.compareTo("") == 0){
+			turn = 0;
+		} else {
+			turn = Integer.parseInt(turnS);
+		}
+		
+		int fade;
+		String fadeS = (String) json.get("fade");
+		if (fadeS.compareTo("O") == 0 || fadeS.compareTo("-O") == 0 || fadeS.compareTo("") == 0){
+			fade = 0;
+		} else {
+			fade = Integer.parseInt(fadeS);
+		}
+		
+		disc = new Disc(
+			(String) json.get("name"),
+			manufacturer,
+			discType,
+			stability,
+			speed,
+			glide,
+			turn,
+			fade
+		);
+
 		
 		LOGGER.log(Level.INFO, "Created disc '" + disc.getName() + "'");
 		return disc;
@@ -232,18 +262,25 @@ public class FrolfUtil {
 
 		Bag allDisks = new Bag();
 		
-		File[] discFiles = new File("discs/innova").listFiles();
-		for (File file : discFiles) {
-			Disc disc = null;
-			try {
-				disc = readDiscFromFile("discs/innova/" + file.getName());
-			} catch (org.json.simple.parser.ParseException e) { e.printStackTrace(); }
-			
-			if (disc != null) { 
-				allDisks.addDisc(disc);
-				LOGGER.log(Level.INFO, "Loaded disc '" + disc.getName() + "'");
+		File[] manufacturers = new File("discs").listFiles();
+		for (File manufacturer : manufacturers) {
+			LOGGER.log(Level.INFO, "Reading discs for manufacturer ' " + manufacturer + "'");
+
+			File[] discFiles = manufacturer.listFiles();
+			for (File file : discFiles) {
+				Disc disc = null;
+				try {
+//					disc = readDiscFromFile("discs/innova/" + file.getName());
+					disc = readDiscFromFile(file.getPath());
+				} catch (org.json.simple.parser.ParseException e) { e.printStackTrace(); }
+				
+				if (disc != null) { 
+					allDisks.addDisc(disc);
+					LOGGER.log(Level.INFO, "Loaded disc '" + disc.getName() + "'");
+				}
 			}
 		}
+		
 		
 		LOGGER.log(Level.INFO, "Finished loading discs");
 		return allDisks;
@@ -450,10 +487,7 @@ public class FrolfUtil {
 		// Method chain on Bag containing disc catalog if the
 		// criteria is set. The resulting bag will meet all criteria.
 		Bag filteredDiscs = new Bag();
-		try {
-			filteredDiscs = FrolfUtil.loadDiscs().minus(excludedDiscs);
-		} catch (IOException e) { e.printStackTrace(); }
-
+		filteredDiscs = Manager.getInstance().getDiscs().minus(excludedDiscs);
 
 		if (manufacturer != null) {
 			LOGGER.log(Level.INFO, "Filtering to discs only manufactured by '" + manufacturer + "'");
