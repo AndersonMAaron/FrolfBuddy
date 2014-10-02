@@ -487,7 +487,7 @@ public class FrolfUtil {
 		// Method chain on Bag containing disc catalog if the
 		// criteria is set. The resulting bag will meet all criteria.
 		Bag filteredDiscs = new Bag();
-		filteredDiscs = Manager.getInstance().getDiscs().minus(excludedDiscs);
+			filteredDiscs = Manager.getInstance().getDiscs().minus(excludedDiscs);
 
 		if (manufacturer != null) {
 			LOGGER.log(Level.INFO, "Filtering to discs only manufactured by '" + manufacturer + "'");

@@ -23,6 +23,7 @@ public class Home extends javax.swing.JFrame {
      */
     public Home() {
         initComponents();
+        if (Manager.getInstance().getCurrentProfile() != null) { updateProfile(); }
     }
 
     public void updateProfile() {

@@ -17,6 +17,8 @@ public class Manager {
 	private HashMap<String, Course> courses;	// Courses
 	private Bag discs;							// Disc catalog
 	
+	private static final String defaultProfile = "andersonmaaron"; //TODO parameterize?
+	
 	/*
 	 * Please don't look at my privates.
 	 * Singelton constructor
@@ -37,6 +39,8 @@ public class Manager {
 				profiles.get(username).addDiscToBag(discs.getDisc(discName));
 			}
 		}
+		
+		currentProfile = profiles.get(defaultProfile);
 	}
 	
 	/* Singel-ton of fun! */
