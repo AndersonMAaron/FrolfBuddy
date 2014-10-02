@@ -3,6 +3,8 @@ package manager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import player.Profile;
 import util.FrolfUtil;
@@ -17,23 +19,31 @@ public class Manager {
 	private HashMap<String, Course> courses;	// Courses
 	private Bag discs;							// Disc catalog
 	
+	private final static Logger LOGGER = Logger.getLogger( Manager.class.getName() );
 	private static final String defaultProfile = "andersonmaaron"; //TODO parameterize?
-	
+
 	/*
 	 * Please don't look at my privates.
 	 * Singelton constructor
 	 */
 	Manager() {
+		LOGGER.log(Level.INFO, "Loading profiles.");
         profiles = FrolfUtil.loadProfiles();
         currentProfile = null;
         		
 		try {
+			LOGGER.log(Level.INFO, "Loading courses.");
 			courses = FrolfUtil.loadCourseCatalog();
+
+			LOGGER.log(Level.INFO, "Loading discs.");
 			discs = FrolfUtil.loadDiscs();
 		} catch (IOException e) { e.printStackTrace(); }
 		
 		// TODO discs should be a part of the profile definition
+		LOGGER.log(Level.INFO, "Loading player bags.");
 		for (String username : profiles.keySet()) { 
+			LOGGER.log(Level.INFO, "Loading bag for " + username);
+
 			ArrayList<String> discNames = FrolfUtil.readDiscsForUser(username);
 			for (String discName : discNames) {
 				profiles.get(username).addDiscToBag(discs.getDisc(discName));
@@ -60,6 +70,8 @@ public class Manager {
 	
 	/** SETTERS **/
 	public void setCurrentProfile(String username) {
+		LOGGER.log(Level.INFO, "Setting current profile to: " + username);
+
 		if (!profiles.containsKey(username)) {
 			System.out.println("Tried to set current profile to one that doesn't exist.");
 			return;
@@ -71,6 +83,8 @@ public class Manager {
 	 * Saves each profile loaded to JSON
 	 */
 	public void saveProfiles() {
+		LOGGER.log(Level.INFO, "Saving all profiles to JSON.");
+
 		for (String username : profiles.keySet()) {
 			Profile profile = profiles.get(username);
 			try {

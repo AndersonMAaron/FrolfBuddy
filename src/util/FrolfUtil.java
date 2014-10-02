@@ -42,7 +42,6 @@ public class FrolfUtil {
 	public final static int FAIR_MAX_DIST = 320;
 	
 	private final static Logger LOGGER = Logger.getLogger( FrolfUtil.class.getName() );
-
 	
 	/*
 	 * Forms and returns a Disc data model from a specified JSON   
